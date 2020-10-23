@@ -1,0 +1,30 @@
+buildscript {
+    ext.spek2_version = '2.0.9'
+    ext.junit5_version = '5.7.0'
+}
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+}
+
+group 'com.pablobedoya'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+
+    testImplementation "org.spekframework.spek2:spek-dsl-jvm:${spek2_version}"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junit5_version}"
+
+    testRuntimeOnly "org.spekframework.spek2:spek-runner-junit5:${spek2_version}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junit5_version}"
+}
+
+test {
+    useJUnitPlatform()
+}
