@@ -1,5 +1,7 @@
 package com.pablobedoya
 
+import com.beust.klaxon.Klaxon
+import com.pablobedoya.model.response.CreateUserResponse
 import khttp.responses.Response
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.spekframework.spek2.Spek
@@ -23,11 +25,10 @@ object KhttpSpec : Spek({
             }
             Then("Should return that user was successfully created") {
                 val statusCode = response?.statusCode
-                val responseName = response?.jsonObject?.get("name")
-                val responseJob = response?.jsonObject?.get("job")
+                val result = Klaxon().parse<CreateUserResponse>(response?.jsonObject.toString())
                 assertEquals(201, statusCode)
-                assertEquals(requestName, responseName)
-                assertEquals(requestJob, responseJob)
+                assertEquals(requestName, result?.name)
+                assertEquals(requestJob, result?.job)
             }
         }
     }
