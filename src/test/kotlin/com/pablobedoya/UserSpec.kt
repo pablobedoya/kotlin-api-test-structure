@@ -49,7 +49,6 @@ object UserSpec : Spek({
             Then("Should return users first page successfully") {
                 val statusCode = response?.statusCode
                 val result = Klaxon().parse<ListUsersResponse>(StringReader(response?.jsonObject.toString()))
-                val responsePage = response?.jsonObject?.get("page")
                 assertEquals(200, statusCode)
                 assertEquals(requestPage, result?.page)
             }
