@@ -2,12 +2,14 @@ package com.pablobedoya
 
 import com.beust.klaxon.Klaxon
 import com.pablobedoya.model.response.CreateUserResponse
+import com.pablobedoya.model.response.ListUsersResponse
 import khttp.responses.Response
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.gherkin.Feature
+import java.io.StringReader
 
-object KhttpSpec : Spek({
+object UserSpec : Spek({
     val baseUri = "https://reqres.in"
 
     Feature("Create user") {
@@ -46,9 +48,10 @@ object KhttpSpec : Spek({
             }
             Then("Should return users first page successfully") {
                 val statusCode = response?.statusCode
+                val result = Klaxon().parse<ListUsersResponse>(StringReader(response?.jsonObject.toString()))
                 val responsePage = response?.jsonObject?.get("page")
                 assertEquals(200, statusCode)
-                assertEquals(requestPage, responsePage)
+                assertEquals(requestPage, result?.page)
             }
         }
     }
