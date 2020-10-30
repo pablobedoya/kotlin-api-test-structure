@@ -14,7 +14,7 @@ class UserService {
     }
 
     fun createUser(json: Map<String, String>): ResponseData<CreateUserResponse> {
-        val response = khttp.get(url = BASE_URI + USERS_PATH, json = json)
+        val response = khttp.post(url = BASE_URI + USERS_PATH, json = json)
         val createUserResponse: ResponseData<CreateUserResponse> = ResponseData()
         createUserResponse.content = Klaxon().parse<CreateUserResponse>(StringReader(response.jsonObject.toString()))
         createUserResponse.statusCode = response.statusCode
