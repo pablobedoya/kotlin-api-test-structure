@@ -12,8 +12,8 @@ object UserSpec : Spek({
     val userService = UserService()
 
     Feature("Create user") {
-        var requestName: String = ""
-        var requestJob: String = ""
+        var requestName = ""
+        var requestJob = ""
         var response: ResponseData<CreateUserResponse>? = null
         Scenario("Create user successfully") {
             Given("I want to register a user") {
