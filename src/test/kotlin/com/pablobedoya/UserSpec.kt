@@ -1,39 +1,32 @@
 package com.pablobedoya
 
-import com.beust.klaxon.Klaxon
 import com.pablobedoya.model.response.CreateUserResponse
 import com.pablobedoya.model.response.ListUsersResponse
 import com.pablobedoya.model.response.ResponseData
 import com.pablobedoya.model.service.UserService
-import khttp.responses.Response
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.gherkin.Feature
-import java.io.StringReader
 
 object UserSpec : Spek({
-    val baseUri = "https://reqres.in"
     val userService = UserService()
 
     Feature("Create user") {
-        val path = "/api/users"
-        var requestName: String? = null
-        var requestJob: String? = null
-        var response: Response? = null
+        var requestName: String = ""
+        var requestJob: String = ""
+        var response: ResponseData<CreateUserResponse>? = null
         Scenario("Create user successfully") {
             Given("I want to register a user") {
                 requestName = "Morpheus"
                 requestJob = "Leader"
             }
             When("I submit a request to register it") {
-                response = khttp.post(url = baseUri + path, json = mapOf("name" to requestName, "job" to requestJob))
+                response = userService.createUser(mapOf("name" to requestName, "job" to requestJob))
             }
             Then("Should return that user was successfully created") {
-                val statusCode = response?.statusCode
-                val result = Klaxon().parse<CreateUserResponse>(response?.jsonObject.toString())
-                assertEquals(201, statusCode)
-                assertEquals(requestName, result?.name)
-                assertEquals(requestJob, result?.job)
+                assertEquals(201, response?.statusCode)
+                assertEquals(requestName, response?.content?.name)
+                assertEquals(requestJob, response?.content?.job)
             }
         }
     }
