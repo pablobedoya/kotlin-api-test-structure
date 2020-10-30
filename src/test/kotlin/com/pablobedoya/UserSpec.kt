@@ -3,6 +3,8 @@ package com.pablobedoya
 import com.beust.klaxon.Klaxon
 import com.pablobedoya.model.response.CreateUserResponse
 import com.pablobedoya.model.response.ListUsersResponse
+import com.pablobedoya.model.response.ResponseData
+import com.pablobedoya.model.service.UserService
 import khttp.responses.Response
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.spekframework.spek2.Spek
@@ -11,6 +13,7 @@ import java.io.StringReader
 
 object UserSpec : Spek({
     val baseUri = "https://reqres.in"
+    val userService = UserService()
 
     Feature("Create user") {
         val path = "/api/users"
@@ -36,21 +39,18 @@ object UserSpec : Spek({
     }
 
     Feature("List users") {
-        val path = "/api/users"
         var requestPage: Int? = null
-        var response: Response? = null
+        var response: ResponseData<ListUsersResponse>? = null
         Scenario("Get users successfully") {
             Given("I want to search users first page") {
                 requestPage = 1
             }
             When("I submit a request to get users first page") {
-                response = khttp.get(url = baseUri + path, params = mapOf("page" to requestPage.toString()))
+                response = userService.getUsers(mapOf("page" to requestPage.toString()))
             }
             Then("Should return users first page successfully") {
-                val statusCode = response?.statusCode
-                val result = Klaxon().parse<ListUsersResponse>(StringReader(response?.jsonObject.toString()))
-                assertEquals(200, statusCode)
-                assertEquals(requestPage, result?.page)
+                assertEquals(200, response?.statusCode)
+                assertEquals(requestPage, response?.content?.page)
             }
         }
     }
